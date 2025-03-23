@@ -5,8 +5,6 @@ from sklearn.metrics import accuracy_score
 from transformers import BertTokenizer, BertForSequenceClassification, Trainer, TrainingArguments, BertTokenizerFast
 from torch.utils.data import Dataset
 
-#tokenizer = AutoTokenizer.from_pretrained("distilbert/distilbert-base-uncased")
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 df = pd.read_csv("fake_news_dataset.csv")
@@ -16,7 +14,6 @@ tokenizer = BertTokenizerFast.from_pretrained("bert")
 
 train_encodings = tokenizer(list(train_texts), truncation=True, padding=True, max_length=512)
 val_encodings = tokenizer(list(val_texts), truncation=True, padding=True, max_length=512)
-
 
 class FNData(Dataset):
     def __init__(self, encodings, labels):
@@ -43,12 +40,12 @@ training_args = TrainingArguments(
     output_dir="./results",
     evaluation_strategy="epoch",
     save_strategy="epoch",
-    per_device_train_batch_size=8,  # Adjust based on GPU memory
+    per_device_train_batch_size=8,  
     per_device_eval_batch_size=8,
     num_train_epochs=3,
     logging_dir="./logs",
     logging_steps=200,
-    fp16=True,  # Enable mixed precision for faster training
+    fp16=True,  
 )
 
 trainer = Trainer(
@@ -57,7 +54,6 @@ trainer = Trainer(
     train_dataset=train_dataset,
     eval_dataset=val_dataset,
 )
-
 
 trainer.train()
 
